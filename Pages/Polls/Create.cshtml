@@ -1,0 +1,53 @@
+@page
+@model Edap.Pages.Polls.CreateModel
+
+@{
+    ViewData["Title"] = "Create poll";
+}
+
+@section scripts{
+   <partial name="_ValidationScriptsPartial" />
+}
+
+<h1>Create a poll</h1>
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="Poll.Title"></label>
+        <input type="text" asp-for="Poll.Title" class="form-control" />
+        <span asp-validation-for="Poll.Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Poll.Description"></label>
+        <input type="text" asp-for="Poll.Description" class="form-control" />
+        <span asp-validation-for="Poll.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+        <label asp-for="Poll.Location"></label>
+        <input type="text" asp-for="Poll.Location" class="form-control" />
+        <span asp-validation-for="Poll.Location" class="text-danger"></span>
+    </div>
+    
+    <h5>Options</h5>
+    <button type="button" class="btn btn-outline-primary btn-sm mb-2" onclick="addOption()">Add</button>
+    <div id="option-container">
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-sm mt-2 mb-2">Create</button>
+    <a class="btn btn-secondary btn-sm" asp-page="./../Admin/Index">Back to list</a>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => addOption());
+    function addOption() {
+        const container = 
+            $("<div class=\"poll-option d-flex mb-1\" />").append(
+                $("<input type=\"date\" name=\"PollOptionDates\" class=\"form-control\" />")
+            );
+        
+        const delButton = $("<button type=\"button\" class=\"btn btn-outline-danger btn-sm ms-1\">Remove</button>").appendTo(container);
+        delButton.on("click", () => container.remove());
+        
+        $("#option-container").append(container);
+    }
+</script>

@@ -1,0 +1,44 @@
+@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Admin";
+}
+
+<h2>Admin</h2>
+
+<div>
+    <a class="btn btn-primary btn-sm mb-2" asp-page="../Polls/Create">Create poll</a>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Guid</th>
+                    <th scope="col">Closed Date</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Polls)
+                {
+                    var pollGuid = item.PollGuid.ToString("N");
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>@pollGuid</td>
+                        <td>@Html.DisplayFor(modelItem => item.CloseDate)</td>
+                        <td>
+                            <a class="btn btn-secondary btn-sm ms-1" asp-page="../Polls/Index" asp-route-id="@item.Id">Open</a>
+                            <a class="btn btn-secondary btn-sm ms-1" asp-page="../Polls/Participate" asp-route-pollGuid="@pollGuid">Participate</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

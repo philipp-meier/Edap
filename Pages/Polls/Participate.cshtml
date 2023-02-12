@@ -1,0 +1,59 @@
+@page "{pollGuid:Guid}"
+@model Edap.Pages.Polls.ParticipateModel
+
+@{
+    ViewData["Title"] = Model.Poll?.Title;
+}
+
+@section scripts{
+   <partial name="_ValidationScriptsPartial" />
+}
+
+<h2>@(Model.Poll?.Title ?? "Not found")</h2>
+
+@if (Model.Poll != null)
+{
+    <h5>Description</h5>
+    <p>@Html.DisplayFor(x => Model.Poll.Description)</p>
+
+    <h5>Location</h5>
+    <p>@Html.DisplayFor(x => Model.Poll.Location)</p>
+
+    <div>
+        <dl class="row">
+            <dd class="col-sm-10">
+                <form id="" method="post">
+                    <partial name="_PollOptionTable" model="Model.Poll" />
+
+                    @if (!Model.Poll.CloseDate.HasValue)
+                    {
+                        <h5 class="mt-4">Participate</h5>
+                        <div class="form-group">
+                            <label asp-for="Username"></label>
+                            <input type="text" asp-for="Username" class="form-control" />
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Email"></label>
+                            <input type="text" asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        
+                        <input type="submit" class="btn btn-primary mt-2 mb-2 btn-sm" value="Vote" />
+                    }
+                    else
+                    {
+                        <div class="alert alert-success" role="alert">
+                            This poll was closed on @Html.DisplayFor(model => model.Poll.CloseDate)
+                        </div>
+                    }
+                </form>
+            </dd>
+        </dl>
+    </div>
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+    <a class="btn btn-secondary btn-sm" asp-page="./../Admin/Index">Back to list</a>
+}
