@@ -1,8 +1,8 @@
-# .NET Appointment Planner
+# :date: .NET Appointment Planner
 [![CI](https://github.com/philipp-meier/Edap/actions/workflows/dotnet.yml/badge.svg)](https://github.com/philipp-meier/Edap/actions/workflows/dotnet.yml)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/philipp-meier/Edap/blob/main/LICENSE)
 
-Simple web page to schedule appointments by creating a poll with invitation links.
+A simple .NET appointment planner with Keycloak integration, that can be hosted within a Docker container.
 
 ![Preview](https://static.p-meier.dev/polls/ParticipatePoll.png)
 
