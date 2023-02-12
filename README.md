@@ -4,6 +4,8 @@
 
 A simple .NET appointment planner with Keycloak integration, that can be hosted within a Docker container.
 
+**Note:** Participation-links like `https://localhost:7298/polls/participate/e84203a2509748d2bcafa209365707bc` do not require an authenticated user.
+
 ![Preview](https://static.p-meier.dev/polls/ParticipatePoll.png)
 
 ## Use cases
