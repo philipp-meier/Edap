@@ -1,7 +1,7 @@
-@model Edap.Models.Poll
+@model Edap.Shared._PollOptionTableModel
 
 @{
-    var pollOptionsOrdered = Model.Options.OrderBy(x => x.Date).ToArray();
+    var pollOptionsOrdered = Model.Poll.Options.OrderBy(x => x.Date).ToArray();
     var maxVoteAmount = pollOptionsOrdered.Max(x => x.UserVotes.Count());
     var optionsWithMaxVotesAmount = pollOptionsOrdered.Where(x => x.UserVotes.Count() == maxVoteAmount).Count();
 }
@@ -27,7 +27,7 @@
                                     }
                                     <p class="card-text text-center @userVoteStyle"><i class="bi bi-people-fill"></i> @pollOption.UserVotes.Count()</p>
                                 }
-                                @if (!Model.CloseDate.HasValue)
+                                @if (!Model.IsReadOnly && !Model.Poll.CloseDate.HasValue)
                                 {
                                     <input class="card-text form-check-input" type="checkbox" name="SelectedPollOptionIds" value="@(pollOption.Id)" />
                                 }
@@ -38,7 +38,7 @@
             }
         </thead>
         <tbody>
-            @foreach (var userVote in Model.UserVotes.OrderBy(x => x.Username))
+            @foreach (var userVote in Model.Poll.UserVotes.OrderBy(x => x.Username))
             {
                 <tr>
                     <td>@userVote.Username</td>
