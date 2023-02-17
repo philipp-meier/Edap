@@ -56,5 +56,5 @@
 
 @if (User.Identity.IsAuthenticated)
 {
-    <a class="btn btn-secondary btn-sm" asp-page="./../Admin/Index">Back to list</a>
+    <partial name="_BackToListButton" />
 }

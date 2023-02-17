@@ -28,26 +28,88 @@
         <span asp-validation-for="Poll.Location" class="text-danger"></span>
     </div>
     
-    <h5>Options</h5>
-    <button type="button" class="btn btn-outline-primary btn-sm mb-2" onclick="addOption()">Add</button>
+    <h5>Add poll options</h5>
+    <div class="form-group">
+        <label for="fromDate">From</label>
+        <input id="fromDate" type="date" class="form-control" />
+    </div>
+    <div class="form-group mb-2">
+        <label for="toDate">To</label>
+        <input id="toDate" type="date" class="form-control" />
+    </div>
+    <button type="button" class="btn btn-outline-primary btn-sm mb-3" onclick="addOptions()">Add options</button>
+    
+    <h5>Poll options</h5>
     <div id="option-container">
     </div>
 
     <button type="submit" class="btn btn-primary btn-sm mt-2 mb-2">Create</button>
-    <a class="btn btn-secondary btn-sm" asp-page="./../Admin/Index">Back to list</a>
+    <partial name="_BackToListButton" />
 </form>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => addOption());
-    function addOption() {
-        const container = 
-            $("<div class=\"poll-option d-flex mb-1\" />").append(
-                $("<input type=\"date\" name=\"PollOptionDates\" class=\"form-control\" />")
-            );
+    document.addEventListener("DOMContentLoaded", () => {
+        const fromDateCtl = document.getElementById("fromDate");
+        const toDateCtl = document.getElementById("toDate");
         
-        const delButton = $("<button type=\"button\" class=\"btn btn-outline-danger btn-sm ms-1\">Remove</button>").appendTo(container);
-        delButton.on("click", () => container.remove());
+        // Set initial value
+        const currentDate = new Date();
+        fromDateCtl.valueAsDate = currentDate;
+        toDateCtl.valueAsDate = currentDate;
+
+        fromDateCtl.addEventListener("change", () => {
+            const fromDate = fromDateCtl.valueAsDate;
+            const toDate = toDateCtl.valueAsDate;
+
+            if (toDate < fromDate)
+                toDateCtl.value = fromDateCtl.value;
+        });
+    });
+    
+    function addOptions() {
+        const fromDate = document.getElementById("fromDate").valueAsDate;
+        const toDate = document.getElementById("toDate").valueAsDate;
         
-        $("#option-container").append(container);
+        let existingValues = $("#option-container > div >  input")
+            .map((_i, option) => option.valueAsDate.toString())
+            .get();
+        
+        for (let currentDate = fromDate; currentDate <= toDate; currentDate.setDate(currentDate.getDate() + 1)) {
+            if (!existingValues.includes(currentDate.toString()))
+                addOption(currentDate);
+        }
+        
+        reorderPollOptions();
+    }
+
+    function addOption(value) {
+        const container = document.createElement("div");
+        container.className = "poll-option d-flex mb-1";
+
+        const input = document.createElement("input");
+        input.className = "form-control";
+        input.name = "PollOptionDates";
+        input.type = "date";
+        input.valueAsDate = value;
+        input.addEventListener("change", reorderPollOptions);
+        container.append(input);
+
+        const delButton = document.createElement("button");
+        delButton.className = "btn btn-outline-danger btn-sm ms-1";
+        delButton.textContent = "Remove";
+        delButton.type = "button";
+        delButton.addEventListener("click", () => container.remove());
+        container.append(delButton);
+        
+        document.getElementById("option-container").append(container);
+    }
+    
+    function reorderPollOptions() {
+        $("#option-container div").sort((a, b) => {
+            const dateA = a.childNodes[0].valueAsDate;
+            const dateB = b.childNodes[0].valueAsDate;
+
+            return dateA - dateB;
+        }).appendTo($("#option-container"));
     }
 </script>
