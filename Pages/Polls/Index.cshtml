@@ -33,7 +33,10 @@
     <h6>Actions</h6>
     <form method="post">
         <button type="submit" asp-page-handler="ToggleClose" asp-route-id="@Model.Poll.Id" class="btn btn-sm btn-primary">@(Model.Poll.CloseDate.HasValue ? "Reopen poll" : "Close poll")</button>
-        <a class="btn btn-primary btn-sm ms-1" asp-page="../Polls/Participate" asp-route-pollGuid="@Model.Poll.PollGuid">Participate</a>
+        @{
+            var pollGuid = Model.Poll.PollGuid.ToString("N");
+            <a class="btn btn-primary btn-sm ms-1" asp-page="../Polls/Participate" asp-route-pollGuid="@pollGuid">Participate</a>
+        }
         <button type="submit" asp-page-handler="Delete" asp-route-id="@Model.Poll.Id" class="btn btn-sm btn-danger ms-1">Delete</button>
     </form>
 }
