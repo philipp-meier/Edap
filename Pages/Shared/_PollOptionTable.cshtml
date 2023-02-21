@@ -3,62 +3,64 @@
 @{
     var pollOptionsOrdered = Model.Poll.Options.OrderBy(x => x.Date).ToArray();
     var maxVoteAmount = pollOptionsOrdered.Max(x => x.UserVotes.Count());
-    var optionsWithMaxVotesAmount = pollOptionsOrdered.Where(x => x.UserVotes.Count() == maxVoteAmount).Count();
+    var optionsWithMaxVotesAmount = pollOptionsOrdered.Count(x => x.UserVotes.Count() == maxVoteAmount);
 }
-<div class="table-responsive">
-    <table class="table">
-        <thead>
-            <th></th>
-            @foreach (var pollOption in pollOptionsOrdered)
-            {
-                <th scope="col">
-                    <div class="d-flex justify-content-center">
-                        <div class="card mb-3 d-inline-block text-center border-secondary">
-                            <div class="card-header">@pollOption.Date.ToString("MMM.").ToUpper()</div>
-                            <div class="card-body text-dark">
-                                <p class="card-text text-center">@pollOption.Date.ToString("ddd.").ToUpper()</p>
-                                <h5 class="card-title text-center">@pollOption.Date.Day</h5>
-                                @{
-                                    var userVoteStyle = "";
-                                    var userVotes = pollOption.UserVotes.Count();
-                                    if (userVotes == maxVoteAmount && maxVoteAmount > 0)
-                                    {
-                                       userVoteStyle = optionsWithMaxVotesAmount == 1 ? "text-success" : "text-warning";
+<div class="relative overflow-x-auto mb-5 w-100">
+    <table class="w-100">
+        <thead class="border-b border-black">
+            <tr>
+                <th></th>
+                @foreach (var pollOption in pollOptionsOrdered)
+                {
+                    <th scope="col">
+                        <div class="flex justify-center mx-5">
+                            <div class="shadow-lg max-w-sm border border-gray-800 rounded mb-3 p-4 inline-block text-center">
+                                <div class="font-bold text-xl">@pollOption.Date.ToString("MMM.").ToUpper()</div>
+                                <div class="text-gray-700 text-center">
+                                    <p>@pollOption.Date.ToString("ddd.").ToUpper()</p>
+                                    <h5 class="mb-2">@pollOption.Date.Day</h5>
+                                    @{
+                                        var userVoteStyle = "";
+                                        var userVotes = pollOption.UserVotes.Count();
+                                        if (userVotes == maxVoteAmount && maxVoteAmount > 0)
+                                        {
+                                            userVoteStyle = optionsWithMaxVotesAmount == 1 ? "text-green-700" : "text-yellow-400";
+                                        }
+                                        <p class="@userVoteStyle"><i class="bi bi-people-fill"></i> @pollOption.UserVotes.Count()</p>
                                     }
-                                    <p class="card-text text-center @userVoteStyle"><i class="bi bi-people-fill"></i> @pollOption.UserVotes.Count()</p>
-                                }
-                                @if (!Model.IsReadOnly && !Model.Poll.CloseDate.HasValue)
-                                {
-                                    <input class="card-text form-check-input" type="checkbox" name="SelectedPollOptionIds" value="@(pollOption.Id)" />
-                                }
+                                    @if (!Model.IsReadOnly && !Model.Poll.CloseDate.HasValue)
+                                    {
+                                        <input class="default-checkbox" type="checkbox" name="SelectedPollOptionIds" value="@(pollOption.Id)" />
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </th>
-            }
+                    </th>
+                }
+            </tr>
         </thead>
         <tbody>
-            @foreach (var userVote in Model.Poll.UserVotes.OrderBy(x => x.Username))
-            {
-                <tr>
-                    <td>@userVote.Username</td>
-                    @foreach (var pollOption in pollOptionsOrdered)
-                    {
-                        var hasVoted = userVote.Options.Any(x => x == pollOption);
-                        var tdStyle = hasVoted ? "table-success" : "table-warning";
-                        <td class="text-center @tdStyle">
-                            @if (hasVoted)
-                            {
-                                <i class="bi bi-check"></i>
-                            }
-                            else
-                            {
-                                <i class="bi bi-x"></i>
-                            }
-                        </td>
-                    }
-                </tr>
-            }
+        @foreach (var userVote in Model.Poll.UserVotes.OrderBy(x => x.Username))
+        {
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <td class="pr-5">@userVote.Username</td>
+                @foreach (var pollOption in pollOptionsOrdered)
+                {
+                    var hasVoted = userVote.Options.Any(x => x == pollOption);
+                    var tdStyle = hasVoted ? "bg-green-300" : "bg-yellow-200";
+                    <td class="text-center @tdStyle">
+                        @if (hasVoted)
+                        {
+                            <i class="bi bi-check"></i>
+                        }
+                        else
+                        {
+                            <i class="bi bi-x"></i>
+                        }
+                    </td>
+                }
+            </tr>
+        }
         </tbody>
     </table>
 </div>

@@ -7,18 +7,22 @@
 }
 
 @section scripts{
-   <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }
 
 <h2>@(Model.Poll?.Title ?? "Not found")</h2>
 
 @if (Model.Poll != null)
 {
-    <h5>Description</h5>
-    <p>@Html.DisplayFor(x => Model.Poll.Description)</p>
+    <div class="mb-4">
+        <label asp-for="@Model.Poll.Description" class="block text-gray-700 text-sm font-bold mb-2"></label>
+        <input type="text" asp-for="@Model.Poll.Description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled />
+    </div>
 
-    <h5>Location</h5>
-    <p>@Html.DisplayFor(x => Model.Poll.Location)</p>
+    <div class="mb-4">
+        <label asp-for="@Model.Poll.Location" class="block text-gray-700 text-sm font-bold mb-2"></label>
+        <input type="text" asp-for="@Model.Poll.Location" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" disabled />
+    </div>
 
     <div>
         <dl class="row">
@@ -29,24 +33,30 @@
                     @if (!Model.Poll.CloseDate.HasValue)
                     {
                         <h5 class="mt-4">Participate</h5>
-                        <div class="form-group">
-                            <label asp-for="Username"></label>
-                            <input type="text" asp-for="Username" class="form-control" />
+                        <div class="mb-4">
+                            <label asp-for="Username" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                            <input type="text" asp-for="Username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                             <span asp-validation-for="Username" class="text-danger"></span>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="Email"></label>
-                            <input type="text" asp-for="Email" class="form-control" />
+                        <div class="mb-4">
+                            <label asp-for="Email" class="block text-gray-700 text-sm font-bold mb-2"></label>
+                            <input type="text" asp-for="Email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                         
-                        <input type="submit" class="btn btn-primary mt-2 mb-2 btn-sm" value="Vote" />
+                        <input type="submit" class="px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" value="Vote" />
                     }
                     else
                     {
-                        <div class="alert alert-success" role="alert">
-                            This poll was closed on @Html.DisplayFor(model => model.Poll.CloseDate)
-                        </div>
+                        <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
+                            <div class="flex">
+                                <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+                                <div>
+                                    <p class="font-bold">Closed</p>
+                                    <p class="text-sm">This poll was closed on @Html.DisplayFor(model => model.Poll.CloseDate).</p>
+                                </div>
+                            </div>
+                        </div> 
                     }
                 </form>
             </dd>
