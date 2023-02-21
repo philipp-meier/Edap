@@ -6,44 +6,46 @@
 }
 
 @section scripts{
-   <partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }
 
 <h1>Create a poll</h1>
 
 <form method="post">
-    <div class="form-group">
-        <label asp-for="Poll.Title"></label>
-        <input type="text" asp-for="Poll.Title" class="form-control" />
+    <div class="mb-4">
+        <label asp-for="Poll.Title" class="block text-gray-700 text-sm font-bold mb-2"></label>
+        <input type="text" asp-for="Poll.Title" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
         <span asp-validation-for="Poll.Title" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Poll.Description"></label>
-        <input type="text" asp-for="Poll.Description" class="form-control" />
+    <div class="mb-4">
+        <label asp-for="Poll.Description" class="block text-gray-700 text-sm font-bold mb-2"></label>
+        <input type="text" asp-for="Poll.Description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
         <span asp-validation-for="Poll.Description" class="text-danger"></span>
     </div>
-    <div class="form-group mb-3">
-        <label asp-for="Poll.Location"></label>
-        <input type="text" asp-for="Poll.Location" class="form-control" />
+    <div class="mb-4">
+        <label asp-for="Poll.Location" class="block text-gray-700 text-sm font-bold mb-2"></label>
+        <input type="text" asp-for="Poll.Location" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
         <span asp-validation-for="Poll.Location" class="text-danger"></span>
     </div>
     
     <h5>Add poll options</h5>
-    <div class="form-group">
-        <label for="fromDate">From</label>
-        <input id="fromDate" type="date" class="form-control" />
+    <div class="mb-1">
+        <label for="fromDate" class="block text-gray-700 text-sm font-bold mb-2">From</label>
+        <input id="fromDate" type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
     </div>
-    <div class="form-group mb-2">
-        <label for="toDate">To</label>
-        <input id="toDate" type="date" class="form-control" />
+    <div class="mb-4">
+        <label for="toDate" class="block text-gray-700 text-sm font-bold mb-2">To</label>
+        <input id="toDate" type="date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
     </div>
-    <button type="button" class="btn btn-outline-primary btn-sm mb-3" onclick="addOptions()">Add options</button>
+    <button type="button" onclick="addOptions()" class="mb-3 px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        Add options
+    </button>
     
     <h5>Poll options</h5>
-    <div id="option-container">
+    <div id="option-container" class="mb-5">
     </div>
 
-    <button type="submit" class="btn btn-primary btn-sm mt-2 mb-2">Create</button>
+    <button type="submit" class="px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create</button>
     <partial name="_BackToListButton" />
 </form>
 
@@ -87,7 +89,7 @@
         container.className = "poll-option d-flex mb-1";
 
         const input = document.createElement("input");
-        input.className = "form-control";
+        input.className = "shadow appearance-none border rounded mr-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline";
         input.name = "PollOptionDates";
         input.type = "date";
         input.valueAsDate = value;
@@ -95,7 +97,7 @@
         container.append(input);
 
         const delButton = document.createElement("button");
-        delButton.className = "btn btn-outline-danger btn-sm ms-1";
+        delButton.className = "px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800";
         delButton.textContent = "Remove";
         delButton.type = "button";
         delButton.addEventListener("click", () => container.remove());
