@@ -49,8 +49,8 @@ A simple .NET appointment planner with Keycloak integration, that can be hosted 
 - **Step 2:** Create a volume on the host to persist data.  
 `docker volume create edap_volume`  
 
-- **Step 3:** Copy your polls.db database to the edap_volume
-`docker volume inspect edap_volume`: To find the location of the edap_volume.  
+- **Step 3:** Copy your polls.db database to the edap_volume.  
+Use `docker volume inspect edap_volume` to find the location of the edap_volume.  
 
 - **Step 4:** Download the image on the host machine and run the container.  
 `docker login <DOCKER_REGISTRY_HOST>`  
