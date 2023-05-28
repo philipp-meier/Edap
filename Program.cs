@@ -5,56 +5,73 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
 
 // Add services to the container.
-builder.Services.Configure<RouteOptions>(options => {
+services.Configure<RouteOptions>(options =>
+{
     options.LowercaseUrls = true;
 });
 
-builder.Services.AddRazorPages()
-    .AddRazorPagesOptions(options => {
+services.AddRazorPages()
+    .AddRazorPagesOptions(options =>
+    {
         options.Conventions.AuthorizeFolder("/");
         options.Conventions.AllowAnonymousToPage("/Index");
         options.Conventions.AllowAnonymousToPage("/Polls/Participate");
     });
 
-builder.Services.AddDbContext<PollContext>(options =>
+services.AddDbContext<PollContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddAuthentication(options => {
-        options.DefaultScheme = "cookie";
-        options.DefaultChallengeScheme = "oidc";
-    })
-    .AddCookie("cookie", options => {
-        options.Cookie.Name = builder.Configuration["IdentityProvider:CookieName"];
+services.AddAuthentication(options =>
+{
+    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+})
+.AddCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    //options.Cookie.SameSite = SameSiteMode.Strict;
 
-        options.Events.OnSigningOut = async e => {
-            await e.HttpContext.RevokeUserRefreshTokenAsync();
-        };
-    })
-    .AddOpenIdConnect("oidc", options => {
-        options.Authority = builder.Configuration["IdentityProvider:Authority"];
-        
-        options.ClientId = builder.Configuration["IdentityProvider:ClientId"];
-        options.ClientSecret = builder.Configuration["IdentityProvider:ClientSecret"];
-        
-        options.Scope.Add("openid");
-        options.ResponseType = OpenIdConnectResponseType.Code;
+    options.Cookie.Name = builder.Configuration["IdentityProvider:CookieName"];
+    options.Events.OnSigningOut = async e => await e.HttpContext.RevokeUserRefreshTokenAsync();
+})
+.AddOpenIdConnect(options =>
+{
+    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
-        options.TokenValidationParameters = new TokenValidationParameters {
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["IdentityProvider:ClientId"]
-        };
+    options.Authority = builder.Configuration["IdentityProvider:Authority"];
+    options.ClientId = builder.Configuration["IdentityProvider:ClientId"];
+    options.ClientSecret = builder.Configuration["IdentityProvider:ClientSecret"];
+    options.ResponseType = OpenIdConnectResponseType.Code;
+    options.ResponseMode = OpenIdConnectResponseMode.Query;
+    options.GetClaimsFromUserInfoEndpoint = true;
+    options.RequireHttpsMetadata = true;
 
-        options.SaveTokens = true;
-    });
+    options.Scope.Add("openid");
 
-builder.Services.AddScoped<PollService>();
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = options.Authority,
+        ValidAudience = options.ClientId,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+    };
+
+    options.SaveTokens = true;
+});
+
+services.AddScoped<PollService>();
 
 // Required for the NGINX proxy.
-builder.Services.Configure<ForwardedHeadersOptions>(options => {
+services.Configure<ForwardedHeadersOptions>(options =>
+{
     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
     options.KnownNetworks.Clear();
     options.KnownProxies.Clear();
