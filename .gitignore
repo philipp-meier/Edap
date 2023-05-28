@@ -13,6 +13,7 @@ Data
 *.user
 *.userosscache
 *.sln.docstates
+ProviderInfo.txt
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

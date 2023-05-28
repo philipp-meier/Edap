@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Web;
 
 namespace Edap.Pages;
 
@@ -21,10 +22,10 @@ public class LogoutModel : PageModel
         var redirectUri = $"{Request.Scheme}://{Request.Host}";
 
         SignOut("cookie", "oidc");
-        
+
         // To ensure that all auth. cookies are being deleted, since ASP.NET Core uses the ChunkingCookieManager for cookie authentication by default.
         new ChunkingCookieManager().DeleteCookie(HttpContext, _config["IdentityProvider:CookieName"], new CookieOptions());
 
-        return Redirect(idpHost + "/protocol/openid-connect/logout?post_logout_redirect_uri=" + redirectUri + "&id_token_hint=" + idToken);
+        return Redirect(idpHost + "oidc/logout?id_token_hint=" + idToken + "&post_logout_redirect_uri=" + HttpUtility.UrlEncode(redirectUri));
     }
 }
