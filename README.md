@@ -3,7 +3,9 @@
 [![CI](https://github.com/philipp-meier/Edap/actions/workflows/dotnet.yml/badge.svg)](https://github.com/philipp-meier/Edap/actions/workflows/dotnet.yml)
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/philipp-meier/Edap/blob/main/LICENSE)
 
-A simple .NET appointment planner with OpenID Connect (OAuth) integration, that can be hosted within a Docker container.
+A simple .NET appointment planner with OpenID Connect (OAuth) integration, that can be hosted within a Docker container.  
+
+This application will be replaced with [Rankt](https://github.com/philipp-meier/Rankt) in the future.
 
 **Note:** Participation-links like `https://localhost:7298/polls/participate/e84203a2509748d2bcafa209365707bc` do not require an authenticated user.
 
