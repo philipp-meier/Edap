@@ -24,7 +24,7 @@ public class PollService
             .IncludePollAssocs()
             .SingleOrDefaultAsync();
     
-    public async Task<int> CreatePollAsync(Poll poll, DateTime[] pollOptionDates)
+    public async Task CreatePollAsync(Poll poll, DateTime[] pollOptionDates)
     {
         foreach (var date in pollOptionDates) {
             var pollOption = new PollOption { Date = date };
@@ -32,7 +32,7 @@ public class PollService
         }
 
         await _dbContext.Polls.AddAsync(poll);
-        return await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task VoteAsync(Guid pollGuid, string username, string email, int[] selectedPollOptions)

@@ -2,8 +2,8 @@
 
 @{
     var pollOptionsOrdered = Model.Poll.Options.OrderBy(x => x.Date).ToArray();
-    var maxVoteAmount = pollOptionsOrdered.Max(x => x.UserVotes.Count());
-    var optionsWithMaxVotesAmount = pollOptionsOrdered.Where(x => x.UserVotes.Count() == maxVoteAmount).Count();
+    var maxVoteAmount = pollOptionsOrdered.Max(x => x.UserVotes.Count);
+    var optionsWithMaxVotesAmount = pollOptionsOrdered.Count(x => x.UserVotes.Count == maxVoteAmount);
 }
 <div class="table-responsive">
     <table class="table">
@@ -20,12 +20,12 @@
                                 <h5 class="card-title text-center">@pollOption.Date.Day</h5>
                                 @{
                                     var userVoteStyle = "";
-                                    var userVotes = pollOption.UserVotes.Count();
+                                    var userVotes = pollOption.UserVotes.Count;
                                     if (userVotes == maxVoteAmount && maxVoteAmount > 0)
                                     {
                                        userVoteStyle = optionsWithMaxVotesAmount == 1 ? "text-success" : "text-warning";
                                     }
-                                    <p class="card-text text-center @userVoteStyle"><i class="bi bi-people-fill"></i> @pollOption.UserVotes.Count()</p>
+                                    <p class="card-text text-center @userVoteStyle"><i class="bi bi-people-fill"></i> @pollOption.UserVotes.Count</p>
                                 }
                                 @if (!Model.IsReadOnly && !Model.Poll.CloseDate.HasValue)
                                 {

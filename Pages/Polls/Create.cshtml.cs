@@ -23,10 +23,10 @@ public class CreateModel : PageModel
     }
     
     public async Task<IActionResult> OnPostAsync() {
-        if (ModelState.IsValid && Poll != null) {
-             await _pollService.CreatePollAsync(Poll, PollOptionDates);
-            return RedirectToPage("Index", new { id = Poll.Id });
-        }
-        return Page();
+        if (!ModelState.IsValid || Poll == null)
+            return Page();
+        
+        await _pollService.CreatePollAsync(Poll, PollOptionDates);
+        return RedirectToPage("Index", new { id = Poll.Id });
     }
 }

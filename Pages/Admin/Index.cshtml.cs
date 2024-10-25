@@ -4,15 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Edap.Pages.Admin;
 
-public class IndexModel : PageModel
+public class IndexModel(PollContext pc) : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
-
-    public DbSet<Poll> Polls { get; set; }
-
-    public IndexModel(PollContext pc, ILogger<IndexModel> logger)
-    {
-        Polls = pc.Polls;
-        _logger = logger;
-    }
+    public DbSet<Poll> Polls { get; set; } = pc.Polls;
 }

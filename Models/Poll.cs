@@ -10,13 +10,7 @@ public class Poll
     public string Description { get; set; }
     public string Location { get; set; }
     public DateTime? CloseDate { get; set; }
-    public Guid PollGuid { get; set; }
-    public ICollection<UserVote> UserVotes { get; set; }
-    public ICollection<PollOption> Options { get; set; }
-    
-    public Poll() {
-        PollGuid = Guid.NewGuid();
-        Options = new List<PollOption>();
-        UserVotes = new List<UserVote>();
-    }
+    public Guid PollGuid { get; set; } = Guid.NewGuid();
+    public ICollection<UserVote> UserVotes { get; set; } = new List<UserVote>();
+    public ICollection<PollOption> Options { get; set; } = new List<PollOption>();
 }

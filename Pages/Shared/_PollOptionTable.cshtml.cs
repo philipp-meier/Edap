@@ -7,7 +7,7 @@ public class _PollOptionTableModel {
     public bool IsReadOnly { get; init; }
     
     public static _PollOptionTableModel Create(Poll poll, bool isReadOnly = false)
-        => new _PollOptionTableModel(poll, isReadOnly);
+        => new (poll, isReadOnly);
     
     private _PollOptionTableModel(Poll poll, bool isReadOnly) {
         Poll = poll;

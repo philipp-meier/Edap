@@ -5,11 +5,8 @@ namespace Edap.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
-
-    public IndexModel(PollContext pc, ILogger<IndexModel> logger)
+    public IndexModel(PollContext pc)
     {
-        _logger = logger;
     }
 
     public void OnGet()

@@ -2,7 +2,6 @@ using Edap.Models;
 using Edap.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -40,7 +39,6 @@ services.AddAuthentication(options =>
     //options.Cookie.SameSite = SameSiteMode.Strict;
 
     options.Cookie.Name = builder.Configuration["IdentityProvider:CookieName"];
-    options.Events.OnSigningOut = async e => await e.HttpContext.RevokeUserRefreshTokenAsync();
 })
 .AddOpenIdConnect(options =>
 {
@@ -55,6 +53,8 @@ services.AddAuthentication(options =>
     options.RequireHttpsMetadata = true;
 
     options.Scope.Add("openid");
+    options.Scope.Add("email");
+    options.Scope.Add("profile");
 
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -62,6 +62,19 @@ services.AddAuthentication(options =>
         ValidAudience = options.ClientId,
         ValidateIssuer = true,
         ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.FromSeconds(5),
+        IssuerSigningKeyResolver = (_, _, kid, _) =>
+        {
+            var jsonAsync = new HttpClient().GetStringAsync(builder.Configuration["IdentityProvider:JwksUri"]);
+            jsonAsync.Wait();
+
+            return JsonWebKeySet.Create(jsonAsync.Result)
+                .GetSigningKeys()
+                .Where(x => x.KeyId == kid)
+                .ToArray();
+        }
     };
 
     options.SaveTokens = true;
